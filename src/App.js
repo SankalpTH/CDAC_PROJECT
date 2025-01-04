@@ -39,6 +39,7 @@ function App() {
                 <About />
                 <Features />
                 <Contact />
+                <p>Yo</p>
               </div>
             }
           />
