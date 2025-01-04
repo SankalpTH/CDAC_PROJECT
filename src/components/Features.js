@@ -32,6 +32,7 @@ const Features = () => {
                                     <p className="card-text">
                                         Get detailed information about each PG or mess, including photos, pricing, and available amenities.
                                     </p>
+                                    
                                 </div>
                             </div>
                         </div>
