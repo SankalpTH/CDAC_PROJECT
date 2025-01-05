@@ -63,16 +63,30 @@ public class CustomerService {
 	        return crepo.save(c);
 	    }
 
-	    public String updateCustomer(int id, Customer updatedCustomer) {
-	    	Customer exestiCustomer=crepo.findById(id).orElse(null);
-	    	if(exestiCustomer!=null) {
-	    		exestiCustomer.setAdharcard_number(updatedCustomer.getAdharcard_number());
-	    		exestiCustomer.setDob(updatedCustomer.getDob());
-	    		exestiCustomer.setType(updatedCustomer.getType());
-	    		exestiCustomer.setUser(updatedCustomer.getUser());
-	    		 crepo.save(exestiCustomer);
+	    public String updateCustomer(int id, DummyUserCustomer updatedCustomer) throws Exception {
+	    	Customer existingCustomer=crepo.findById(id).orElse(null);
+	    	if(existingCustomer==null) {
+	    		throw new Exception("Customer not found");
 	    	}
-			return "Updated succesfully";	       
+	    	User existingUser=existingCustomer.getUser();
+	    	if(existingUser==null) {
+	    		throw new Exception("Associated user not found for this cutomer");
+	    	}
+	    	//Updating User
+	    	existingUser.setFname(updatedCustomer.getFname());
+	    	existingUser.setLname(updatedCustomer.getLname());
+	    	existingUser.setEmail(updatedCustomer.getEmail());
+	    	existingUser.setPassword(updatedCustomer.getPassword());
+	    	existingUser.setPermanentAddress(updatedCustomer.getPermanent_address());
+	    	existingUser.setPhoneNumber(updatedCustomer.getPhone_number());
+	    	urepo.save(existingUser);
+	    	//Updating customer
+	    	existingCustomer.setAdharcard_number(updatedCustomer.getAdharcard_number());
+	    	existingCustomer.setDob((updatedCustomer.getDob()));
+	    	existingCustomer.setType(updatedCustomer.getType());
+	    	existingCustomer.setUser(existingUser);
+	    	crepo.save(existingCustomer);
+	    	return "Updated succesfully";	       
 	    }
 
 	    public void deleteCustomer(int id) {

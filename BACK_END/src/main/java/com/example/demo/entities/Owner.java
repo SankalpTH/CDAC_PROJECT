@@ -1,4 +1,7 @@
 package com.example.demo.entities;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
@@ -10,6 +13,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Enumerated;
@@ -31,6 +35,11 @@ private OwnerType type;
 @OneToOne    
 @JoinColumn(name = "uid")
 @Cascade(CascadeType.ALL)
+
+//@OneToMany(mappedBy = "owner")
+//private List<Pg> pgs;
+//@OneToMany(mappedBy = "owner")
+//private List<Mess> messes;
 private User user;
 
 public int getOid() {
@@ -40,15 +49,6 @@ public int getOid() {
 public void setOid(int oid) {
 	this.oid = oid;
 }
-
-public String getAdharcard_number() {
-	return adharcardNumber;
-}
-
-public void setAdharcard_number(String adharcard_number) {
-	this.adharcardNumber = adharcard_number;
-}
-
 public OwnerType getType() {
 	return type;
 }
@@ -65,10 +65,37 @@ public void setUser(User user) {
 	this.user = user;
 }
 
-public Owner(String adharcard_number, OwnerType type, User user) {
+public String getAdharcardNumber() {
+	return adharcardNumber;
+}
+
+public void setAdharcardNumber(String adharcardNumber) {
+	this.adharcardNumber = adharcardNumber;
+}
+
+//public List<Pg> getPgs() {
+//	return pgs;
+//}
+//
+//public void setPgs(List<Pg> pgs) {
+//	this.pgs = pgs;
+//}
+
+//public List<Mess> getMesses() {
+//	return messes;
+//}
+//
+//public void setMesses(List<Mess> messes) {
+//	this.messes = messes;
+//}
+
+public Owner(int oid, String adharcardNumber, OwnerType type, List<Pg> pgs, List<Mess> messes, User user) {
 	super();
-	this.adharcardNumber = adharcard_number;
+	this.oid = oid;
+	this.adharcardNumber = adharcardNumber;
 	this.type = type;
+//	this.pgs = pgs;
+//	this.messes = messes;
 	this.user = user;
 }
 

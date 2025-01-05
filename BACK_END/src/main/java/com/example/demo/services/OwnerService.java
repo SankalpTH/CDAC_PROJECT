@@ -23,7 +23,6 @@ public class OwnerService {
 	UserRepository urepo;
 	@Autowired
 	RoleRepository rrepo;
-	
 	public List<Owner> getAllOwner(){
 		return orepo.findAll();
 	}
@@ -57,23 +56,38 @@ public class OwnerService {
 		u.setRole(r);
 		u.setPermanentAddress(duo.getPermanent_address());
 		
-		o.setAdharcard_number(duo.getAdharcard_number());
+		o.setAdharcardNumber(duo.getAdharcard_number());
 		o.setType(duo.getType());
 		o.setUser(u);
 		
 		return orepo.save(o);
 	}
-	public void updateOwner(int id,Owner updateOwner)
+	public void updateOwner(int id,DummyUserOwner updateOwner) throws Exception
 	{
 		Owner existingOwner=orepo.findById(id).orElse(null);
-		if(existingOwner!=null) {
-			existingOwner.setAdharcard_number(updateOwner.getAdharcard_number());
-			existingOwner.setType(updateOwner.getType());
-			existingOwner.setUser(updateOwner.getUser());
-			orepo.save(existingOwner);
+		if(existingOwner==null) {
+		throw new Exception("Owner not exist");
 		}
+		User existingUser=existingOwner.getUser();
+		if(existingUser==null) {
+			throw new Exception("Associated user not found");
+		}
+		existingUser.setFname(updateOwner.getFname());
+		existingUser.setLname(updateOwner.getLname());
+		existingUser.setEmail(updateOwner.getEmail());
+		existingUser.setPassword(updateOwner.getPassword());
+		existingUser.setPhoneNumber(updateOwner.getPhone_number());
+		existingUser.setPermanentAddress(updateOwner.getPermanent_address());
+		urepo.save(existingUser);
+		existingOwner.setAdharcardNumber(updateOwner.getAdharcard_number());
+		existingOwner.setType(updateOwner.getType());
+		existingOwner.setUser(existingUser);
+		orepo.save(existingOwner);
+		
 	}
 	public void deleteOwner(int id) {
 		orepo.deleteById(id);
 	}
-}
+
+		
+	}

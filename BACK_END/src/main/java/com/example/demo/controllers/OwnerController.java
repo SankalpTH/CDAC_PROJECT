@@ -14,6 +14,7 @@ import org.springframework.web.service.annotation.DeleteExchange;
 
 import com.example.demo.entities.DummyUserOwner;
 import com.example.demo.entities.Owner;
+import com.example.demo.services.EmailService;
 import com.example.demo.services.OwnerService;
 import com.example.demo.services.UserService;
 
@@ -27,6 +28,9 @@ public class OwnerController {
 	@Autowired
 	UserService uservice;
 	
+	@Autowired
+	EmailService emailService;
+	
 	@GetMapping("/getAllOwners")
 	 public List<Owner> getAllOwner(){
 		return oservice.getAllOwner();
@@ -37,17 +41,35 @@ public class OwnerController {
     }
     @PostMapping("/saveOwner")
     public String createOwner(@RequestBody DummyUserOwner duo) throws Exception {
-        try {
-            oservice.CreateOwner(duo);
-            return "Owner created successfully";
-        } catch (Exception e) {
-            // Catch and return only the error message
-            return e.getMessage();
-        }
+    	 try {
+             // Save the customer details (service layer handling database logic)
+             oservice.CreateOwner(duo);
+             System.out.println("User registered: " + duo);
+
+             // Prepare email content
+             String subject = "Registration Successful";
+             String body = String.format(
+                 "Dear %s %s,<br><br>" +
+                 "Thank you for registering with <b>PG-EXPLORER !</b><br>" +
+                 "Your account as OWNER has been successfully created.<br><br>" +
+                 "Best regards,<br><b>PG-EXPLORER</b> Team",
+                 duo.getFname(),
+                 duo.getLname()
+             );
+
+             // Send email
+             emailService.sendEmail(duo.getEmail(), subject, body);
+
+             return "Owner added and email sent successfully.";
+         } catch (Exception e) {
+             // Log the error and return an appropriate message
+             System.err.println("Error in saving customer or sending email: " + e.getMessage());
+             return "Failed to add customer or send email. Error: " + e.getMessage();
+         }
     }
     @PutMapping("/updateCustomer/{id}")
-    public String UpdateOwner(@PathVariable int id,@RequestBody Owner owner) {
-    	oservice.updateOwner(id, owner);
+    public String UpdateOwner(@PathVariable int id,@RequestBody DummyUserOwner ownerDetails) throws Exception {
+    	oservice.updateOwner(id, ownerDetails);
     	return "updated succesfully";
     }
     @DeleteExchange("removeOwner/{id}")

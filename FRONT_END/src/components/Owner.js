@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { useParams,useNavigate,Outlet } from 'react-router-dom';
+import { useParams, useNavigate, Outlet } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Logout from './Logout';
+import AddMessForm from './AddMessForm';
+import AddPGForm from './AddPGForm';
 
 const OwnerPage = () => {
     const { type: ownerType } = useParams();
     const navigate = useNavigate();
     const [pgList] = useState([]);
-    //const [showMesslist] = useState([]);
     const [showPgList, setShowPgList] = useState(false);
     const [showFavorites, setShowFavorites] = useState(false);
+    const [showAddPGForm, setShowAddPGForm] = useState(false);
+    const [showAddMessForm, setShowAddMessForm] = useState(false);
     const [showProfileDropdown, setShowProfileDropdown] = useState(false);
     const [showProfile, setShowProfile] = useState(false);
     const [currentOwner, setCurrentOwner] = useState(null);
 
     const favoriteCustomers = useSelector((state) => state.customers?.favoriteCustomers || []);
-     
-     console.log(currentOwner);
-    // Fetch data from localStorage
+
     useEffect(() => {
         const ownerData = localStorage.getItem('user');
         if (ownerData) {
@@ -27,15 +28,29 @@ const OwnerPage = () => {
         }
     }, []);
 
-    // Check if currentOwner exists
     if (!currentOwner) {
         return <div>Loading owner information...</div>;
     }
 
-  //  const profileInitial = currentOwner.name.charAt(0).toUpperCase();
- // const { name } = currentOwner;
+    const profileInitial = currentOwner?.fname ? currentOwner.fname.charAt(0).toUpperCase() : '';
 
-  const profileInitial = currentOwner?.fname ? currentOwner.fname.charAt(0).toUpperCase() : '';
+    const toggleAddPGForm = () => {
+        setShowAddPGForm((prev) => !prev);
+        setShowAddMessForm(false); // Ensure Mess form is hidden
+    };
+
+    const toggleAddMessForm = () => {
+        setShowAddMessForm((prev) => !prev);
+        setShowAddPGForm(false); // Ensure PG form is hidden
+    };
+
+    const toggleProfile = () => {
+        setShowProfile(true);
+        setShowAddPGForm(false);
+        setShowAddMessForm(false);
+        setShowFavorites(false);
+        setShowPgList(false);
+    };
 
     return (
         <>
@@ -43,12 +58,11 @@ const OwnerPage = () => {
                 <div className="container-fluid">
                     <span className="navbar-brand">Owner Dashboard</span>
 
-                    {/* Add PG, Your PG, and View Favorites Options */}
                     {ownerType === 'PG' && (
                         <>
                             <button
                                 className="btn btn-outline-primary btn-sm ms-2"
-                                onClick={() => navigate('addpg')}
+                                onClick={toggleAddPGForm}
                             >
                                 Add PG
                             </button>
@@ -65,7 +79,7 @@ const OwnerPage = () => {
                         <>
                             <button
                                 className="btn btn-outline-primary btn-sm ms-2"
-                                onClick={() => navigate('addmess')}
+                                onClick={toggleAddMessForm}
                             >
                                 Add Mess
                             </button>
@@ -80,16 +94,15 @@ const OwnerPage = () => {
 
                     <button
                         className="btn btn-outline-info btn-sm ms-2"
-                        onClick={() => setShowFavorites(!showFavorites)}
+                        onClick={() => setShowFavorites((prev) => !prev)}
                     >
                         View Favorites
                     </button>
 
-                    {/* Profile Icon */}
                     <div className="ms-auto">
                         <button
                             className="btn btn-link p-0"
-                            onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+                            onClick={() => setShowProfileDropdown((prev) => !prev)}
                         >
                             <div
                                 className="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center"
@@ -100,16 +113,12 @@ const OwnerPage = () => {
                         </button>
                     </div>
 
-                    {/* Dropdown Menu for Profile and Logout */}
                     {showProfileDropdown && (
                         <div
                             className="dropdown-menu show"
                             style={{ position: 'absolute', right: '10px', top: '50px' }}
                         >
-                            <button
-                                className="dropdown-item"
-                                onClick={() => setShowProfile(true)}
-                            >
+                            <button className="dropdown-item" onClick={toggleProfile}>
                                 View Profile
                             </button>
                             <Logout />
@@ -119,33 +128,23 @@ const OwnerPage = () => {
             </nav>
 
             <div className="container mt-5">
-                <h2>Welcome, {currentOwner.fname}!</h2>
-                <p>This is your dashboard for managing {ownerType.toLowerCase()} operations.</p>
-                <Outlet />
-                {/* Profile Section */}
                 {showProfile && (
                     <div className="card mt-4">
                         <div className="card-header">
                             <h4>Your Profile</h4>
                         </div>
                         <div className="card-body">
-                            <p>
-                                <strong>Name:</strong> {currentOwner.fname}
-                            </p>
-                            <p>
-                                <strong>Email:</strong> {currentOwner.email}
-                            </p>
-                            <p>
-                                <strong>Phone Number:</strong> {currentOwner.phoneNumber}
-                            </p>
-                            <p>
-                                <strong>Address:</strong> {currentOwner.permanentAddress}
-                            </p>
+                            <p><strong>Name:</strong> {currentOwner.fname}</p>
+                            <p><strong>Email:</strong> {currentOwner.email}</p>
+                            <p><strong>Phone Number:</strong> {currentOwner.phoneNumber}</p>
+                            <p><strong>Address:</strong> {currentOwner.permanentAddress}</p>
                         </div>
                     </div>
                 )}
 
-                {/* Favorite Customers Section */}
+                {showAddPGForm && <AddPGForm />}
+                {showAddMessForm && <AddMessForm />}
+
                 {showFavorites && (
                     <div className="mt-4">
                         <h4>Customers Who Favorited Your {ownerType}</h4>
@@ -161,9 +160,8 @@ const OwnerPage = () => {
                             <p>No customers have favorited your {ownerType.toLowerCase()} yet.</p>
                         )}
                     </div>
-                )} 
+                )}
 
-                {/* Your PG Section */}
                 {showPgList && (
                     <div className="mt-4">
                         <h4>Your PGs</h4>
@@ -178,26 +176,8 @@ const OwnerPage = () => {
                         ) : (
                             <p>No PGs added yet.</p>
                         )}
-                        
                     </div>
-                )} 
-                 {/* {showMesslist && (
-                    <div className="mt-4">
-                        <h4>Your Mess</h4>
-                        {showMesslist.length > 0 ? (
-                            <ul>
-                                {showMesslist.map((Mess, index) => (
-                                    <li key={index}>
-                                        <strong>{Mess.name}</strong> - {Mess.address}, ₹{Mess.pricing}/month
-                                    </li>
-                                ))}
-                            </ul>
-                        ) : (
-                            <p>No Mess added yet.</p>
-                        )}
-                        
-                    </div>
-                )}  */}
+                )}
             </div>
         </>
     );
