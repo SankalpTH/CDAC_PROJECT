@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import {login} from "./slice";
+import { useNavigate, Link } from "react-router-dom";
+import { login } from "./slice";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -24,8 +24,8 @@ const Login = () => {
         break;
       case "password":
         if (!value.trim()) error = "Password is required.";
-        else if (value.length < 6)
-          error = "Password must be at least 6 characters.";
+        // else if (value.length < 6)
+        //   error = "Password must be at least 6 characters.";
         break;
       default:
         break;
@@ -63,13 +63,11 @@ const Login = () => {
       });
 
       if (response.ok) {
-        const user =  await response.json();
-       
+        const user = await response.json();
+
         dispatch(login());
         // Store user data in localStorage
         localStorage.setItem("user", JSON.stringify(user));
-      
-
 
         // Redirect user based on their type
         if (user.role.rid == "1") {
@@ -92,6 +90,15 @@ const Login = () => {
       console.error("Error during login:", error);
       alert("Login failed. Please try again later.");
     }
+  };
+
+  // Clear form fields handler
+  const handleClear = () => {
+    setFormData({
+      email: "",
+      password: "",
+    });
+    setErrors({});
   };
 
   return (
@@ -117,8 +124,25 @@ const Login = () => {
                 {errors[field] && <small className="text-danger">{errors[field]}</small>}
               </div>
             ))}
-            <button type="submit" className="btn btn-primary mb-3">Login</button>
+            <div className="d-flex justify-content-between">
+              <button type="submit" className="btn btn-primary mb-3">Login</button>
+              <button
+                type="button"
+                className="btn btn-secondary mb-3"
+                onClick={handleClear}
+              >
+                Clear
+              </button>
+            </div>
           </form>
+          <div className="d-flex justify-content-between mt-3">
+            <Link to="/forgot-password" className="btn btn-link">
+              Forgot Password ?
+            </Link>
+            <Link to="/change-password" className="btn btn-link">
+              Change Password
+            </Link>
+          </div>
         </div>
       </div>
       <p>{JSON.stringify(formData)}</p>

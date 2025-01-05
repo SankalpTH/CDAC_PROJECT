@@ -9,7 +9,7 @@ const Hero = () => {
                 <p className="lead">Find your perfect PG or Mess with ease.</p>
                 <button className="btn btn-primary btn-lg">Explore Now</button>
             </div>
-            <p>Hello Guys</p>
+  
         </div>
     );
 };

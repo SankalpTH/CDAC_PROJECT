@@ -1,4 +1,4 @@
-//Register.js
+// Register.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -20,6 +20,7 @@ const Register = () => {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
+  // Field-specific validation logic
   const validateField = (name, value) => {
     let error = "";
     switch (name) {
@@ -34,7 +35,11 @@ const Register = () => {
         break;
       case "password":
         if (!value.trim()) error = "Password is required.";
-        else if (value.length < 6) error = "Password must be at least 6 characters.";
+        else if (
+          !/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,15}$/.test(value)
+        ) {
+          error = "Password must be 6-15 characters, with at least one uppercase letter, one digit, and one special character.";
+        }
         break;
       case "phone_number":
         if (!value.trim()) error = "Contact number is required.";
@@ -59,7 +64,8 @@ const Register = () => {
     }
     setErrors((prev) => ({ ...prev, [name]: error }));
   };
-
+  
+  // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
@@ -74,6 +80,7 @@ const Register = () => {
     validateField(name, value);
   };
 
+  // Handle form submission
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
@@ -102,9 +109,10 @@ const Register = () => {
 
     try {
       // Select the correct API URL based on userType (Customer or Owner)
-      const apiUrl = formData.userType === "Customer"
-        ? "http://localhost:8080/SaveCustomers" // Send to Customer table
-        : "http://localhost:8080/saveOwner"; // Send to Owner table
+      const apiUrl =
+        formData.userType === "Customer"
+          ? "http://localhost:8080/SaveCustomers" // Send to Customer table
+          : "http://localhost:8080/saveOwner"; // Send to Owner table
 
       // Send the data to the appropriate API
       const response = await fetch(apiUrl, {
@@ -130,23 +138,33 @@ const Register = () => {
         <div className="col-md-6">
           <h3 className="text-center">Register</h3>
           <form onSubmit={handleFormSubmit}>
-            {["fname", "lname", "email", "password", "phone_number", "adharcard_number", "dob"].map((field) => (
-              <div className="mb-3" key={field}>
-                <label htmlFor={field} className="form-label">
-                  {field.replace("_", " ").replace(/^\w/, (c) => c.toUpperCase())}
-                </label>
-                <input
-                  type={field === "password" ? "password" : (field === "dob" ? "date" : "text")}
-                  className="form-control"
-                  id={field}
-                  name={field}
-                  value={formData[field]}
-                  onChange={handleInputChange}
-                  required
-                />
-                {errors[field] && <small className="text-danger">{errors[field]}</small>}
-              </div>
-            ))}
+            {["fname", "lname", "email", "password", "phone_number", "adharcard_number", "dob"].map(
+              (field) => (
+                <div className="mb-3" key={field}>
+                  <label htmlFor={field} className="form-label">
+                    {field.replace("_", " ").replace(/^\w/, (c) => c.toUpperCase())}
+                  </label>
+                  <input
+                    type={
+                      field === "password"
+                        ? "password"
+                        : field === "dob"
+                        ? "date"
+                        : "text"
+                    }
+                    className="form-control"
+                    id={field}
+                    name={field}
+                    value={formData[field]}
+                    onChange={handleInputChange}
+                    required
+                    // Restrict future dates for dob
+                    max={field === "dob" ? new Date().toISOString().split("T")[0] : undefined}
+                  />
+                  {errors[field] && <small className="text-danger">{errors[field]}</small>}
+                </div>
+              )
+            )}
             <div className="mb-3">
               <label htmlFor="userType" className="form-label">User Type</label>
               <select
@@ -168,7 +186,10 @@ const Register = () => {
                 <label className="form-label">
                   {formData.userType === "Customer" ? "Customer Type" : "Owner Type"}
                 </label>
-                {(formData.userType === "Customer" ? ["Student", "Other"] : ["PG_OWNER", "MESS_OWNER"]).map((type) => (
+                {(formData.userType === "Customer"
+                  ? ["Student", "Other"]
+                  : ["PG_OWNER", "MESS_OWNER"]
+                ).map((type) => (
                   <div className="form-check" key={type}>
                     <input
                       className="form-check-input"

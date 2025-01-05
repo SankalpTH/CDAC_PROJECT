@@ -19,6 +19,8 @@ import CustomerPage from './components/CustomerPage';
 import Owner from './components/Owner';
 import AddPGForm from './components/AddPGForm';
 import AddMessForm from './components/AddMessForm';
+import ForgotPassword from './components/ForgotPassword';
+import ChangePassword from './components/ChangePassword';
 
 function App() {
   return (
@@ -51,7 +53,10 @@ function App() {
           <Route path="/owner/:type" element={<Owner />} >
               <Route path="addpg" element={<AddPGForm />} />
               <Route path="addmess" element={<AddMessForm />} />
+
           </Route>
+          <Route path = "/forgot-password" element={<ForgotPassword/>}/ >
+          <Route path = "/change-password" element={<ChangePassword/>}/ >
           <Route path="/" element={<Features />} />
          
           
