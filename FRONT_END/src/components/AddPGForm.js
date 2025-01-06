@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const AddPGForm = ({ ownerData }) => {
+const AddPGForm = ({ ownerData, onSuccess }) => {
     const [formData, setFormData] = useState({
         pgName: '',
         pgAddress: '',
@@ -48,6 +48,7 @@ const AddPGForm = ({ ownerData }) => {
                 const result = await response.json();
                 console.log('PG Registered:', result);
                 alert('PG registered successfully!');
+                onSuccess(result); // Update the parent component with the new PG
             } else {
                 const error = await response.text();
                 console.error('Error registering PG:', error);
@@ -80,7 +81,7 @@ const AddPGForm = ({ ownerData }) => {
                         className="form-control"
                         name="pgAddress"
                         onChange={handleChange}
-                        requiredacc
+                        required
                     />
                 </div>
                 <div className="mb-3">

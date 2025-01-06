@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Logout from './Logout';
 import AddMessForm from './AddMessForm';
@@ -7,8 +7,8 @@ import AddPGForm from './AddPGForm';
 
 const OwnerPage = () => {
     const { type: ownerType } = useParams();
-    const navigate = useNavigate();
-    const [pgList] = useState([]);
+    const [pgList, setPgList] = useState([]);
+    const [messList, setMessList] = useState([]);  // New state for storing added mess
     const [showPgList, setShowPgList] = useState(false);
     const [showFavorites, setShowFavorites] = useState(false);
     const [showAddPGForm, setShowAddPGForm] = useState(false);
@@ -36,12 +36,22 @@ const OwnerPage = () => {
 
     const toggleAddPGForm = () => {
         setShowAddPGForm((prev) => !prev);
-        setShowAddMessForm(false); // Ensure Mess form is hidden
+        setShowAddMessForm(false); // Hide Mess form
     };
 
     const toggleAddMessForm = () => {
         setShowAddMessForm((prev) => !prev);
-        setShowAddPGForm(false); // Ensure PG form is hidden
+        setShowAddPGForm(false); // Hide PG form
+    };
+
+    const handlePGAddSuccess = (newPG) => {
+        setPgList((prev) => [...prev, newPG]);
+        setShowAddPGForm(false); // Hide the form
+    };
+
+    const handleMessAddSuccess = (newMess) => {
+        setMessList((prev) => [...prev, newMess]);  // Add the newly registered mess to the list
+        setShowAddMessForm(false); // Hide the form
     };
 
     const toggleProfile = () => {
@@ -58,39 +68,19 @@ const OwnerPage = () => {
                 <div className="container-fluid">
                     <span className="navbar-brand">Owner Dashboard</span>
 
-                    {ownerType === 'PG' && (
-                        <>
-                            <button
-                                className="btn btn-outline-primary btn-sm ms-2"
-                                onClick={toggleAddPGForm}
-                            >
-                                Add PG
-                            </button>
-                            <button
-                                className="btn btn-outline-secondary btn-sm ms-2"
-                                onClick={() => setShowPgList(!showPgList)}
-                            >
-                                Your PG
-                            </button>
-                        </>
-                    )}
+                    <button
+                        className="btn btn-outline-primary btn-sm ms-2"
+                        onClick={ownerType === 'PG' ? toggleAddPGForm : toggleAddMessForm}
+                    >
+                        {ownerType === 'PG' ? 'Add PG' : 'Add Mess'}
+                    </button>
 
-                    {ownerType === 'Mess' && (
-                        <>
-                            <button
-                                className="btn btn-outline-primary btn-sm ms-2"
-                                onClick={toggleAddMessForm}
-                            >
-                                Add Mess
-                            </button>
-                            <button
-                                className="btn btn-outline-secondary btn-sm ms-2"
-                                onClick={() => setShowPgList(!showPgList)}
-                            >
-                                Your Mess
-                            </button>
-                        </>
-                    )}
+                    <button
+                        className="btn btn-outline-secondary btn-sm ms-2"
+                        onClick={() => setShowPgList(!showPgList)}
+                    >
+                        Your {ownerType}
+                    </button>
 
                     <button
                         className="btn btn-outline-info btn-sm ms-2"
@@ -137,7 +127,7 @@ const OwnerPage = () => {
                             <h4>Your Profile</h4>
                         </div>
                         <div className="card-body">
-                            <p><strong>Name:</strong> {currentOwner.fname}{currentOwner.lname}</p>
+                            <p><strong>Name:</strong> {currentOwner.fname} {currentOwner.lname}</p>
                             <p><strong>Email:</strong> {currentOwner.email}</p>
                             <p><strong>Phone Number:</strong> {currentOwner.phoneNumber}</p>
                             <p><strong>Address:</strong> {currentOwner.permanentAddress}</p>
@@ -145,8 +135,8 @@ const OwnerPage = () => {
                     </div>
                 )}
 
-                {showAddPGForm && <AddPGForm />}
-                {showAddMessForm && <AddMessForm ownerData={currentOwner} />}
+                {showAddPGForm && <AddPGForm ownerData={currentOwner} onSuccess={handlePGAddSuccess} />}
+                {showAddMessForm && <AddMessForm ownerData={currentOwner} onSuccess={handleMessAddSuccess} />}
 
                 {showFavorites && (
                     <div className="mt-4">
@@ -165,19 +155,36 @@ const OwnerPage = () => {
                     </div>
                 )}
 
-                {showPgList && (
+                {showPgList && ownerType === 'PG' && (
                     <div className="mt-4">
                         <h4>Your PGs</h4>
                         {pgList.length > 0 ? (
                             <ul>
                                 {pgList.map((pg, index) => (
                                     <li key={index}>
-                                        <strong>{pg.name}</strong> - {pg.address}, ₹{pg.pricing}/month
+                                        <strong>{pg.pgName}</strong> - {pg.pgAddress}, ₹{pg.pricing}/month
                                     </li>
                                 ))}
                             </ul>
                         ) : (
                             <p>No PGs added yet.</p>
+                        )}
+                    </div>
+                )}
+
+                {showPgList && ownerType === 'Mess' && (
+                    <div className="mt-4">
+                        <h4>Your Messes</h4>
+                        {messList.length > 0 ? (
+                            <ul>
+                                {messList.map((mess, index) => (
+                                    <li key={index}>
+                                        <strong>{mess.messName}</strong> - {mess.messAddress}, ₹{mess.pricing}/month
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>No Messes added yet.</p>
                         )}
                     </div>
                 )}

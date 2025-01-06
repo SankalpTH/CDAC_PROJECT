@@ -1,214 +1,319 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import Logout from './Logout'; // Assuming Logout component exists
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios"; // Axios for API calls.
+import Logout from "./Logout"; // Assumes Logout component is defined and handles logout logic.
 
 const CustomerPage = () => {
-    const navigate = useNavigate();
-    const [showProfile, setShowProfile] = useState(false);
-    const [showFavorites, setShowFavorites] = useState(false);
-    const [showDropdown, setShowDropdown] = useState(false);
-    const [user, setUser] = useState(null);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [searchResults, setSearchResults] = useState([]);
-    const [searchTriggered, setSearchTriggered] = useState(false);
+  const navigate = useNavigate();
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [user, setUser] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchTriggered, setSearchTriggered] = useState(false);
+  const [searchType, setSearchType] = useState("PG");
+  const [selectedFilters, setSelectedFilters] = useState([]);
+  const [favorites, setFavorites] = useState([]);
+  const [showProfile, setShowProfile] = useState(false); // For profile toggle
 
-    useEffect(() => {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
-        } else {
-            alert('No user data found. Redirecting to login...');
-            navigate('/login');
-        }
-    }, [navigate]);
+  const amenities = ["Wi-Fi", "AC", "Laundry"];
+  const foodOptions = ["Veg", "Non-Veg"];
 
-    // Page refresh confirmation
-    useEffect(() => {
-        const handleBeforeUnload = (event) => {
-            event.preventDefault();
-            event.returnValue = ''; // Trigger confirmation dialog
-        };
+  const dummyData = {
+    pgs: [
+      { id: 1, name: "PG 1", location: "Gokhalenagar", price: "6000", amenities: ["Wi-Fi", "AC"], food: "Veg" },
+      { id: 2, name: "PG 2", location: "Shivajinagar", price: "4000", amenities: ["Wi-Fi"], food: "Non-Veg" },
+      { id: 3, name: "PG 3", location: "Gokhalenagar", price: "5000", amenities: ["Laundry", "Wi-Fi"], food: "Veg" },
+    ],
+    messes: [
+      { id: 1, name: "Mess 1", location: "Gokhalenagar", price: "3000", food: "Veg" },
+      { id: 2, name: "Mess 2", location: "Shivajinagar", price: "4000", food: "Non-Veg" },
+      { id: 3, name: "Mess 3", location: "Gokhalenagar", price: "2500", food: "Veg" },
+    ],
+  };
 
-        window.addEventListener('beforeunload', handleBeforeUnload);
-
-        return () => {
-            window.removeEventListener('beforeunload', handleBeforeUnload);
-        };
-    }, []);
-
-    const pgData = [
-        { id: 1, name: "Sai PG", location: "Shivaji Nagar", price: "₹5000", ownerName: "Ramesh Kumar", ownerPhone: "+919876543210" },
-        { id: 2, name: "Shanti PG", location: "Kothrud", price: "₹7000", ownerName: "Sunita Yadav", ownerPhone: "+919876543211" },
-        { id: 3, name: "Dhanraj PG", location: "Gokhalenagar", price: "₹6000", ownerName: "Vijay Sharma", ownerPhone: "+919876543212" }
-    ];
-
-    const messData = [
-        { id: 1, name: "Tasty Mess", location: "Shivaji Nagar", price: "₹2000", ownerName: "Rohit Shetty", ownerPhone: "+919812345678" },
-        { id: 2, name: "Healthy Bites", location: "Kothrud", price: "₹2500", ownerName: "Anita Mehta", ownerPhone: "+919812345679" },
-        { id: 3, name: "Food Paradise", location: "Gokhalenagar", price: "₹2200", ownerName: "Arjun Kapoor", ownerPhone: "+919812345680" }
-    ];
-
-    const favoritePGs = [
-        { id: 1, name: "Sai PG", location: "Shivaji Nagar", price: "₹5000", ownerName: "Ramesh Kumar", ownerPhone: "+919876543210" },
-        { id: 2, name: "Shanti PG", location: "Kothrud", price: "₹7000", ownerName: "Sunita Yadav", ownerPhone: "+919876543211" },
-        { id: 3, name: "Dhanraj PG", location: "Gokhalenagar", price: "₹6000", ownerName: "Vijay Sharma", ownerPhone: "+919876543212" }
-    ];
-
-    const handleSearch = (e) => {
-        e.preventDefault();
-        setSearchTriggered(true);
-        const results = [
-            ...pgData.filter(item => item.location.toLowerCase().includes(searchQuery.toLowerCase())),
-            ...messData.filter(item => item.location.toLowerCase().includes(searchQuery.toLowerCase()))
-        ];
-        setSearchResults(results);
-    };
-
-    const handleInputChange = (e) => {
-        setSearchQuery(e.target.value);
-        setSearchResults([]);
-        setSearchTriggered(false);
-    };
-
-    if (!user) {
-        return null; // Avoid rendering if user is not loaded
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    } else {
+      alert("No user data found. Redirecting to login...");
+      navigate("/login");
     }
+  }, [navigate]);
 
-    const { name } = user;
-    const profileInitial = user?.fname ? user.fname.charAt(0).toUpperCase() : '';
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    setSearchTriggered(true);
 
-    return (
-        <>
-            <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                <div className="container-fluid">
-                    <Link className="navbar-brand" to="/">Home</Link>
-                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div className="collapse navbar-collapse" id="navbarNav">
-                        <form className="d-flex mx-auto w-50" onSubmit={handleSearch}>
-                            <input
-                                className="form-control me-2"
-                                type="search"
-                                placeholder="Search PGs or Mess by location"
-                                aria-label="Search"
-                                value={searchQuery}
-                                onChange={handleInputChange}
-                                required
-                            />
-                            <button className="btn btn-outline-success" type="submit">Search</button>
-                        </form>
-                        <ul className="navbar-nav ms-2">
-                            <li className="nav-item ms-3">
-                                <button className="nav-link btn btn-link p-0" onClick={() => setShowFavorites(!showFavorites)}>
-                                    Favorites
-                                </button>
-                            </li>
-                            <li className="nav-item ms-3">
-                                <button className="nav-link btn btn-link p-0" onClick={() => setShowDropdown(!showDropdown)}>
-                                    <div className="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center" style={{ width: '40px', height: '40px', fontSize: '18px' }}>
-                                        {profileInitial}
-                                    </div>
-                                </button>
-                                {showDropdown && (
-                                    <div className="dropdown-menu show" style={{ position: 'absolute', right: '10px' }}>
-                                        <button
-                                            className="dropdown-item"
-                                            onClick={() => setShowProfile(prev => !prev)}
-                                        >
-                                            View Profile
-                                        </button>
-                                        <Logout />
-                                    </div>
-                                )}
-                            </li>
-                        </ul>
-                    </div>
+    try {
+      const filteredResults =
+        searchType === "PG"
+          ? dummyData.pgs.filter((pg) => pg.location.toLowerCase().includes(searchQuery.toLowerCase()))
+          : dummyData.messes.filter((mess) => mess.location.toLowerCase().includes(searchQuery.toLowerCase()));
+
+      setSearchResults(filteredResults);
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+      alert("An error occurred while fetching search results.");
+    }
+  };
+
+  const toggleFilter = (filter) => {
+    if (selectedFilters.includes(filter)) {
+      setSelectedFilters(selectedFilters.filter((item) => item !== filter));
+    } else {
+      setSelectedFilters([...selectedFilters, filter]);
+    }
+  };
+
+  const handleAddToFavorites = async (item) => {
+    try {
+      await axios.post("/api/favorites", { item });
+      setFavorites((prevFavorites) => [...prevFavorites, item]);
+      alert(`${item.name} added to favorites!`);
+    } catch (error) {
+      console.error("Error adding to favorites:", error);
+      alert("An error occurred while adding to favorites.");
+    }
+  };
+
+  const handleViewProfile = () => {
+    setShowProfile(!showProfile); // Toggle profile visibility
+    setShowProfileModal(false);
+  };
+
+  if (!user) {
+    return null;
+  }
+
+  const { fname, lname, email, phoneNumber, permanentAddress } = user;
+  const profileInitial = user?.fname ? user.fname.charAt(0).toUpperCase() : "";
+
+  return (
+    <>
+      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <div className="container-fluid">
+          <Link className="navbar-brand" to="/">
+            Home
+          </Link>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <ul className="navbar-nav ms-auto">
+          
+            <li className="nav-item ms-3">
+              <button
+                className="nav-link btn btn-link p-0"
+                onClick={() => setShowDropdown(!showDropdown)}
+              >
+                <div
+                  className="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center"
+                  style={{ width: "40px", height: "40px", fontSize: "18px" }}
+                >
+                  {profileInitial}
                 </div>
-            </nav>
-
-            <div className="container mt-5">
-                <div className="row">
-                    <div className="col-12">
-                        <h2>Welcome {user.fname +" !"}</h2>
-                        <p className="lead">Hello {user.fname}, here's your personalized dashboard where you can view your profile, search for PGs, and can view your favorite PG's!</p>
-                    </div>
+              </button>
+              {showDropdown && (
+                <div
+                  className="dropdown-menu show"
+                  style={{ position: "absolute", right: "10px" }}
+                >
+                  <button
+                    className="dropdown-item"
+                    onClick={handleViewProfile} // Toggles profile visibility
+                  >
+                    View Profile
+                  </button>
+                  <Logout />
                 </div>
+              )}
+            </li>
+          </ul>
+        </div>
+      </nav>
 
-                {showProfile && (
-                    <div className="row mt-4">
-                        <div className="col-md-6">
-                            <div className="card">
-                                <div className="card-header">
-                                    <h4>Your Profile</h4>
-                                </div>
-                                <div className="card-body">
-                                    <p><strong>Name:</strong> {user.fname}{user.lname}</p>
-                                    <p><strong>Email:</strong> {user.email}</p>
-                                    <p><strong>Phone Number:</strong> {user.phoneNumber}</p>
-                                    <p><strong>Address:</strong> {user.permanentAddress}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
+      <div className="container mt-5">
+        <div className="row">
+          <div className="col-12">
+            <h2>Welcome {fname}!</h2>
+            <p className="lead">
+              Here's your personalized dashboard to explore PGs and Messes.
+            </p>
+          </div>
+        </div>
 
-                {showFavorites && (
-                    <div className="row mt-4">
-                        <div className="col-12">
-                            <div className="card">
-                                <div className="card-header">
-                                    <h4>Your Favorite PGs</h4>
-                                </div>
-                                <div className="card-body">
-                                    {favoritePGs.length > 0 ? (
-                                        <ul>
-                                            {favoritePGs.map(pg => (
-                                                <li key={pg.id}>
-                                                    <strong>{pg.name}</strong> - {pg.location} - {pg.price}
-                                                    <br />
-                                                    <span><strong>PG Owner:</strong> {pg.ownerName} | <strong>Contact:</strong> {pg.ownerPhone}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    ) : (
-                                        <p>You have no favorite PGs yet.</p>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {searchTriggered && (
-                    <div className="row mt-4">
-                        <div className="col-12">
-                            <div className="card">
-                                <div className="card-header">
-                                    <h4>Search Results</h4>
-                                </div>
-                                <div className="card-body">
-                                    {searchResults.length > 0 ? (
-                                        <ul>
-                                            {searchResults.map(item => (
-                                                <li key={item.id}>
-                                                    <strong>{item.name}</strong> - {item.location} - {item.price}
-                                                    <br />
-                                                    <span><strong>Owner:</strong> {item.ownerName} | <strong>Contact:</strong> {item.ownerPhone}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    ) : (
-                                        <p>No results found for "{searchQuery}".</p>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
+        <form onSubmit={handleSearch}>
+          <div className="row mb-3">
+            <div className="col-md-3">
+              <select className="form-select">
+                <option>Select City</option>
+                <option>Pune</option>
+                <option>Mumbai</option>
+              </select>
             </div>
-        </>
-    );
+            <div className="col-md-6">
+              <input
+                className="form-control"
+                type="search"
+                placeholder="Search by location"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                required
+              />
+            </div>
+            <div className="col-md-3">
+              <button className="btn btn-success w-100" type="submit">
+                Search
+              </button>
+            </div>
+          </div>
+        </form>
+
+        {/* Profile Modal */}
+        {showProfileModal && (
+          <div className="modal fade show" style={{ display: "block" }} tabIndex="-1">
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">User Profile</h5>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    onClick={() => setShowProfileModal(false)}
+                  ></button>
+                </div>
+                <div className="modal-body">
+                  <p><strong>Name:</strong> {fname} {lname}</p>
+                  <p><strong>Email:</strong> {email}</p>
+                  <p><strong>Phone:</strong> {phoneNumber}</p>
+                  <p><strong>Address:</strong> {permanentAddress}</p>
+                </div>
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={handleViewProfile}
+                  >
+                    View Profile
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="row mb-3">
+          <div className="col-md-3">
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="type"
+                id="pg"
+                value="PG"
+                checked={searchType === "PG"}
+                onChange={() => setSearchType("PG")}
+              />
+              <label className="form-check-label" htmlFor="pg">
+                PG
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="type"
+                id="mess"
+                value="Mess"
+                checked={searchType === "Mess"}
+                onChange={() => setSearchType("Mess")}
+              />
+              <label className="form-check-label" htmlFor="mess">
+                Mess
+              </label>
+            </div>
+          </div>
+          <div className="col-md-6">
+            <div className="dropdown">
+              <button
+                className="btn btn-outline-secondary dropdown-toggle w-100"
+                type="button"
+                id="dropdownMenuButton"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                {searchType === "PG" ? "Select Amenities" : "Select Food Options"}
+              </button>
+              <ul
+                className="dropdown-menu p-3"
+                aria-labelledby="dropdownMenuButton"
+              >
+                {(searchType === "PG" ? amenities : foodOptions).map((item) => (
+                  <li key={item} className="dropdown-item">
+                    <div className="form-check">
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        id={`filter-${item}`}
+                        onChange={() => toggleFilter(item)}
+                      />
+                      <label className="form-check-label" htmlFor={`filter-${item}`}>
+                        {item}
+                      </label>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div className="row mt-3">
+          <div className="col-12">
+            <h3>Search Results:</h3> 
+            {searchTriggered ? (
+              <div>
+                {searchResults.map((item) => (
+                  <div key={item.id} className="card mb-3">
+                    <div className="card-body">
+                      <h5 className="card-title">{item.name}</h5>
+                      <p className="card-text">Location: {item.location}</p>
+                      <p className="card-text">Price: {item.price}</p>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => handleAddToFavorites(item)}
+                      >
+                        Add to Favorites
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p>No results to display.</p>
+            )}
+          </div>
+        </div>
+
+        {/* Display Profile Details Below Search Results */}
+        {showProfile && (
+          <div className="mt-5">
+            <h3>User Profile</h3>
+            <p><strong>Name:</strong> {fname} {lname}</p>
+            <p><strong>Email:</strong> {email}</p>
+            <p><strong>Phone:</strong> {phoneNumber}</p>
+            <p><strong>Address:</strong> {permanentAddress}</p>
+          </div>
+        )}
+      </div>
+    </>
+  );
 };
 
 export default CustomerPage;
