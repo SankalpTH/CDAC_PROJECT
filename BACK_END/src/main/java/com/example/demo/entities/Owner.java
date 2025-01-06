@@ -94,8 +94,7 @@ public Owner(int oid, String adharcardNumber, OwnerType type, List<Pg> pgs, List
 	this.oid = oid;
 	this.adharcardNumber = adharcardNumber;
 	this.type = type;
-//	this.pgs = pgs;
-//	this.messes = messes;
+
 	this.user = user;
 }
 
