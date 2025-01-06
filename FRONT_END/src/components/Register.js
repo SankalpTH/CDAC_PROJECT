@@ -1,6 +1,7 @@
 // Register.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -19,6 +20,20 @@ const Register = () => {
 
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+
+   // Page refresh confirmation
+      useEffect(() => {
+          const handleBeforeUnload = (event) => {
+              event.preventDefault();
+              event.returnValue = ''; // Trigger confirmation dialog
+          };
+  
+          window.addEventListener('beforeunload', handleBeforeUnload);
+  
+          return () => {
+              window.removeEventListener('beforeunload', handleBeforeUnload);
+          };
+      }, []);
 
   // Field-specific validation logic
   const validateField = (name, value) => {
@@ -64,7 +79,7 @@ const Register = () => {
     }
     setErrors((prev) => ({ ...prev, [name]: error }));
   };
-  
+
   // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -149,8 +164,8 @@ const Register = () => {
                       field === "password"
                         ? "password"
                         : field === "dob"
-                        ? "date"
-                        : "text"
+                          ? "date"
+                          : "text"
                     }
                     className="form-control"
                     id={field}

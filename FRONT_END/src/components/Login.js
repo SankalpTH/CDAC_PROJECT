@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { login } from "./slice";
@@ -77,7 +77,7 @@ const Login = () => {
         } else if (user.owner.type == "MESS_OWNER") {
           navigate("/owner/Mess");
         } else {
-          console.log("Sending login data:", formData);
+          // console.log("Sending login data:", formData);
 
           alert("Unknown user type. Please contact support.");
         }
@@ -87,7 +87,7 @@ const Login = () => {
         throw new Error("Unexpected server error.");
       }
     } catch (error) {
-      console.error("Error during login:", error);
+      //  console.error("Error during login:", error);
       alert("Login failed. Please try again later.");
     }
   };
@@ -100,6 +100,20 @@ const Login = () => {
     });
     setErrors({});
   };
+
+   // Page refresh confirmation
+      useEffect(() => {
+          const handleBeforeUnload = (event) => {
+              event.preventDefault();
+              event.returnValue = ''; // Trigger confirmation dialog
+          };
+  
+          window.addEventListener('beforeunload', handleBeforeUnload);
+  
+          return () => {
+              window.removeEventListener('beforeunload', handleBeforeUnload);
+          };
+      }, []);
 
   return (
     <div className="container mt-5 mb-5">
@@ -145,7 +159,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-      <p>{JSON.stringify(formData)}</p>
+      {/* <p>{JSON.stringify(formData)}</p> */}
     </div>
   );
 };

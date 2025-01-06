@@ -3,7 +3,7 @@ import React from 'react';
 
 const Features = () => {
     return (
-        <div className="container mt-5 mb-5">
+        <div id="features-section" className="container mt-5 mb-5">
             <div className="row">
                 <div className="col-md-12">
                     <h1 className="text-center mb-4">Our Features</h1>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Outlet } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Logout from './Logout';
 import AddMessForm from './AddMessForm';
@@ -45,7 +45,7 @@ const OwnerPage = () => {
     };
 
     const toggleProfile = () => {
-        setShowProfile(true);
+        setShowProfile((prev) => !prev);
         setShowAddPGForm(false);
         setShowAddMessForm(false);
         setShowFavorites(false);
@@ -119,7 +119,7 @@ const OwnerPage = () => {
                             style={{ position: 'absolute', right: '10px', top: '50px' }}
                         >
                             <button className="dropdown-item" onClick={toggleProfile}>
-                                View Profile
+                                {showProfile ? 'Hide Profile' : 'View Profile'}
                             </button>
                             <Logout />
                         </div>
@@ -128,13 +128,16 @@ const OwnerPage = () => {
             </nav>
 
             <div className="container mt-5">
+                <h2>Welcome, {currentOwner.fname}!</h2>
+                <p>This is your dashboard for managing {ownerType.toLowerCase()} operations.</p>
+
                 {showProfile && (
                     <div className="card mt-4">
                         <div className="card-header">
                             <h4>Your Profile</h4>
                         </div>
                         <div className="card-body">
-                            <p><strong>Name:</strong> {currentOwner.fname}</p>
+                            <p><strong>Name:</strong> {currentOwner.fname}{currentOwner.lname}</p>
                             <p><strong>Email:</strong> {currentOwner.email}</p>
                             <p><strong>Phone Number:</strong> {currentOwner.phoneNumber}</p>
                             <p><strong>Address:</strong> {currentOwner.permanentAddress}</p>
@@ -143,7 +146,7 @@ const OwnerPage = () => {
                 )}
 
                 {showAddPGForm && <AddPGForm />}
-                {showAddMessForm && <AddMessForm />}
+                {showAddMessForm && <AddMessForm ownerData={currentOwner} />}
 
                 {showFavorites && (
                     <div className="mt-4">

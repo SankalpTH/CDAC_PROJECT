@@ -1,5 +1,5 @@
 // Contact.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Contact = () => {
     const [formData, setFormData] = useState({
@@ -18,6 +18,20 @@ const Contact = () => {
         // Handle form submission (e.g., sending data to a server)
         alert('Message sent!');
     };
+
+     // Page refresh confirmation
+        useEffect(() => {
+            const handleBeforeUnload = (event) => {
+                event.preventDefault();
+                event.returnValue = ''; // Trigger confirmation dialog
+            };
+    
+            window.addEventListener('beforeunload', handleBeforeUnload);
+    
+            return () => {
+                window.removeEventListener('beforeunload', handleBeforeUnload);
+            };
+        }, []);
 
     return (
         <div className="container mt-5 mb-5">
@@ -64,7 +78,7 @@ const Contact = () => {
                         <button type="submit" className="btn btn-primary w-100">Send Message</button>
                     </form>
                 </div>
-           </div>
+            </div>
         </div>
     );
 };

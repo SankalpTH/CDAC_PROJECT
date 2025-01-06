@@ -76,6 +76,5 @@ public class CustomerController {
     public String deleteCustomer(@PathVariable int id) {
         cservice.deleteCustomer(id);
         return "Customer deleted successfully";
-    }
-    
+    }  
 }

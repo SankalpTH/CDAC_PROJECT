@@ -1,7 +1,7 @@
 //Logout.js
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { setLoggedIn } from '../Store';
+import { setLoggedIn } from '../Store'; // Import setLoggedIn action
 import { useNavigate } from 'react-router-dom';
 import { logout } from './slice';
 
@@ -17,7 +17,7 @@ const Logout = () => {
 
     const handleLogout = () => {
         const isConfirmed = window.confirm("Are you sure you want to log out?");
-        if (isConfirmed===true) {
+        if (isConfirmed === true) {
             // Clear user data from localStorage (optional)
             localStorage.removeItem("user");
             console.log("true")

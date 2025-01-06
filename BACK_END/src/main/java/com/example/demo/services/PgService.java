@@ -1,10 +1,9 @@
 package com.example.demo.services;
 
+import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.example.demo.entities.Owner;
 import com.example.demo.entities.Pg;
 import com.example.demo.repositories.OwnerRepository;
@@ -28,5 +27,8 @@ public Pg addPg(Pg pg,int onid) throws Exception {
 }
 public Optional<Pg> getPg(int pid) {
 	return prepo.findById(pid);
+    }
+public List<Pg> getPg(String aname,boolean wifi,boolean ac,boolean laundry){
+	return prepo.findPGsByFilters(aname, wifi, ac, laundry);
 }
 }

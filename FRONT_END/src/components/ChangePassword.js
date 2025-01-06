@@ -70,7 +70,7 @@ const ChangePassword = () => {
         throw new Error("Unexpected server error.");
       }
     } catch (error) {
-      console.error("Error in change password:", error);
+      //  console.error("Error in change password:", error);
       setMessage("Failed to process the request. Please try again later.");
     }
   };

@@ -33,7 +33,7 @@ const ForgotPassword = () => {
         throw new Error("Unexpected server error.");
       }
     } catch (error) {
-      console.error("Error in sending OTP:", error);
+      // console.error("Error in sending OTP:", error);
       setMessage("Failed to process the request. Please try again later.");
     }
   };
@@ -64,7 +64,7 @@ const ForgotPassword = () => {
         throw new Error("Unexpected server error.");
       }
     } catch (error) {
-      console.error("Error in OTP verification:", error);
+      //console.error("Error in OTP verification:", error);
       setMessage("Failed to verify OTP. Please try again later.");
     }
   };
