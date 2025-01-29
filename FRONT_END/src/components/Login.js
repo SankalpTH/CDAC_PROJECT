@@ -14,6 +14,7 @@ const Login = () => {
   const dispatch = useDispatch();
 
   // Validation function for each field
+  //Validation is done
   const validateField = (name, value) => {
     let error = "";
     switch (name) {
