@@ -29,16 +29,17 @@ public class CustomerController {
 	UserService uservice;
 	@Autowired
 	EmailService emailService;
-	@GetMapping("/getAllCustomers")
-    public List<Customer> getAllCustomers() {
-        return cservice.getAllCustomers();
-    }
+//	@GetMapping("/getAllCustomers")
+//    public List<Customer> getAllCustomers() {
+//        return cservice.getAllCustomers();
+//    }
 
     @GetMapping("/getOneCustomers/{id}")
     public Customer getCustomerById(@PathVariable int id) {
         Customer customer = cservice.getCustomerById(id);
         return customer;
     }
+//this is controller
 
     @PostMapping("/SaveCustomers")
     public String createCustomer(@RequestBody DummyUserCustomer duc) {
