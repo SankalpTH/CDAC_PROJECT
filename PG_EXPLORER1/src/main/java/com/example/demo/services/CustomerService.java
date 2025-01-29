@@ -88,7 +88,15 @@ public class CustomerService {
 	    	crepo.save(existingCustomer);
 	    	return "Updated succesfully";	       
 	    }
-
+   public String updatePassword(int id,String oldPass,String newPass) throws Exception {
+	   Customer customer = crepo.findById(id).orElseThrow(() -> new Exception("Customer not found"));
+	if(!customer.getUser().getPassword().equals(oldPass)) {
+		throw new Exception("Old password is incorrect");
+	}
+	customer.getUser().setPassword(newPass);
+    crepo.save(customer);
+	  return "Updated succesfully";
+   }
 	    public void deleteCustomer(int id) {
 	        crepo.deleteById(id);
 	    }
