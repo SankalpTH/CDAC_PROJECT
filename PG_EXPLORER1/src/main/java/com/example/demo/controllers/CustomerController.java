@@ -3,6 +3,8 @@ package com.example.demo.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.entities.Customer;
 import com.example.demo.entities.DummyUserCustomer;
+import com.example.demo.entities.PasswordUpdateRequest;
 import com.example.demo.services.CustomerService;
 import com.example.demo.services.EmailService;
 import com.example.demo.services.UserService;
@@ -71,10 +74,19 @@ public class CustomerController {
        cservice.updateCustomer(id, customerDetails);
         return "Updated Succesfully";
     }
+    @PutMapping("/updatePassword/{id}")
+    public ResponseEntity<String> updatePassword(@PathVariable int id, @RequestBody PasswordUpdateRequest request) {
+        try {
+        	 cservice.updatePassword(id, request.getOldPassword(), request.getNewPassword());            return ResponseEntity.ok("Password updated successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 
     @DeleteMapping("/DeleteCustomers/{id}")
     public String deleteCustomer(@PathVariable int id) {
         cservice.deleteCustomer(id);
         return "Customer deleted successfully";
-    }  
+    }
+    
 }

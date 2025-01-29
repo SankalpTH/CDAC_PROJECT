@@ -88,6 +88,14 @@ public class OwnerService {
 	public void deleteOwner(int id) {
 		orepo.deleteById(id);
 	}
-
+	public String updatePassword(int id,String oldPass,String newPass) throws Exception {
+		   Owner owner = orepo.findById(id).orElseThrow(() -> new Exception("Owner not found"));
+		if(!owner.getUser().getPassword().equals(oldPass)) {
+			throw new Exception("Old password is incorrect");
+		}
+		owner.getUser().setPassword(newPass);
+	    orepo.save(owner);
+		  return "Updated succesfully";
+	   }
 		
 	}

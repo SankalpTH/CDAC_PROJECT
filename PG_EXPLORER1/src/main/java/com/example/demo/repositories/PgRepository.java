@@ -23,5 +23,4 @@ public interface PgRepository extends JpaRepository<Pg, Integer> {
 		                          @Param("wifi") boolean wifi,
 		                          @Param("ac") boolean ac,
 		                          @Param("laundry") boolean laundry);
-
 }

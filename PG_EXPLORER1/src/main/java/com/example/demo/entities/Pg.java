@@ -12,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -42,9 +43,14 @@ private Owner owner;
 @JoinColumn(name="area_id")
 private Area area;
 
+@OneToOne
+@JoinColumn(name = "image_id") 
+private Images images;
+
 public int getPgId() {
 	return pgId;
 }
+
 public void setPgId(int pgId) {
 	this.pgId = pgId;
 }
@@ -73,13 +79,14 @@ public void setPricing(BigDecimal pricing) {
 	this.pricing = pricing;
 }
 
-
 public String getDescription() {
 	return description;
 }
+
 public void setDescription(String description) {
 	this.description = description;
 }
+
 public boolean isWifi() {
 	return wifi;
 }
@@ -120,22 +127,34 @@ public void setArea(Area area) {
 	this.area = area;
 }
 
-public Pg() {
-	super();
-	// TODO Auto-generated constructor stub
+public Images getImages() {
+	return images;
 }
 
-public Pg(int pgId, String pgName, String pgAddress, BigDecimal pricing, boolean wifi, boolean ac, boolean laundry,
-		Owner owner, Area area) {
+public void setImages(Images images) {
+	this.images = images;
+}
+
+public Pg(int pgId, String pgName, String pgAddress, BigDecimal pricing, String description, boolean wifi, boolean ac,
+		boolean laundry, Owner owner, Area area, Images images) {
 	super();
 	this.pgId = pgId;
 	this.pgName = pgName;
 	this.pgAddress = pgAddress;
 	this.pricing = pricing;
+	this.description = description;
 	this.wifi = wifi;
 	this.ac = ac;
 	this.laundry = laundry;
 	this.owner = owner;
 	this.area = area;
+	this.images = images;
 }
+
+public Pg() {
+	super();
+	// TODO Auto-generated constructor stub
+}
+
+
 }
