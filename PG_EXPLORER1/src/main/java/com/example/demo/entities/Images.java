@@ -25,10 +25,6 @@ public class Images {
 	@Column(name="image4")
 	private byte[] image4;
 	
-	@OneToOne
-	@JoinColumn(name="pg_pg_id")
-	private Pg pg;
-
 	public int getImageId() {
 		return imageId;
 	}
@@ -69,22 +65,13 @@ public class Images {
 		this.image4 = image4;
 	}
 
-	public Pg getPg() {
-		return pg;
-	}
-
-	public void setPg(Pg pg) {
-		this.pg = pg;
-	}
-
-	public Images(int imageId, byte[] image1, byte[] image2, byte[] image3, byte[] image4, Pg pg) {
+	public Images(int imageId, byte[] image1, byte[] image2, byte[] image3, byte[] image4) {
 		super();
 		this.imageId = imageId;
 		this.image1 = image1;
 		this.image2 = image2;
 		this.image3 = image3;
 		this.image4 = image4;
-		this.pg = pg;
 	}
 
 	public Images() {

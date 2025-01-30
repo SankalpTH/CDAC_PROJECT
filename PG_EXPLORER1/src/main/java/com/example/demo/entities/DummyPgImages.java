@@ -16,6 +16,7 @@ private String description;
 private boolean wifi;
 private boolean ac;
 private boolean laundry;
+
 public byte[] getImage1() {
 	return image1;
 }
@@ -88,7 +89,7 @@ public boolean isLaundry() {
 public void setLaundry(boolean laundry) {
 	this.laundry = laundry;
 }
-public DummyPgImages(byte[] image1, byte[] image2, byte[] image3, byte[] image4, int pid, String pgName,
+public DummyPgImages(String image1, String image2, String image3, String image4, int pid, String pgName,
 		String pgAddress, BigDecimal pricing, String description, boolean wifi, boolean ac, boolean laundry) {
 	super();
 	this.image1 = image1;
@@ -104,4 +105,9 @@ public DummyPgImages(byte[] image1, byte[] image2, byte[] image3, byte[] image4,
 	this.ac = ac;
 	this.laundry = laundry;
 }
+public DummyPgImages() {
+	super();
+	// TODO Auto-generated constructor stub
+}
+
 }
