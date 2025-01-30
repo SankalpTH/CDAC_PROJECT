@@ -39,6 +39,7 @@ public class CustomerController {
         Customer customer = cservice.getCustomerById(id);
         return customer;
     }
+//this is controller
 
     @PostMapping("/SaveCustomers")
     public String createCustomer(@RequestBody DummyUserCustomer duc) {

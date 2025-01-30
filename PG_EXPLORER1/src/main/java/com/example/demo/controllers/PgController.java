@@ -23,9 +23,9 @@ public class PgController {
 	@Autowired
 	PgRepository prepo;
 	
-	@PostMapping("/addPg/{oid}")
-	public String savePg(@PathVariable int oid,@RequestBody DummyPgImages dpi) throws Exception{
-		return pservice.addPg(oid,dpi);
+	@PostMapping("/addPg/{oid}/{aid}")
+	public String savePg(@PathVariable int oid,@RequestBody DummyPgImages dpi,@PathVariable int aid) throws Exception{
+		return pservice.addPg(oid,dpi,aid);
 	}
 	@GetMapping("/getPg/{aname}/{wifi}/{ac}/{laundry}")
 	public List<Pg> getPg( @PathVariable String aname,

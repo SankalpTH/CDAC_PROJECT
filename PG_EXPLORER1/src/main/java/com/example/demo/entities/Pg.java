@@ -2,7 +2,10 @@ package com.example.demo.entities;
 
 import java.math.BigDecimal;
 
+
 import org.hibernate.type.YesNoConverter;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -36,10 +39,12 @@ private boolean ac;
 private boolean laundry;
 
 @ManyToOne
+@JsonIgnore
 @JoinColumn(name="oid")
 private Owner owner;
 
 @ManyToOne
+@JsonIgnore
 @JoinColumn(name="area_id")
 private Area area;
 
@@ -123,8 +128,8 @@ public Area getArea() {
 	return area;
 }
 
-public void setArea(Area area) {
-	this.area = area;
+public void setArea(Area area2) {
+	this.area = area2;
 }
 
 public Images getImages() {
