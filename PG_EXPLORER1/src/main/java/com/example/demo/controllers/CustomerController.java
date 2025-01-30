@@ -29,10 +29,10 @@ public class CustomerController {
 	UserService uservice;
 	@Autowired
 	EmailService emailService;
-//	@GetMapping("/getAllCustomers")
-//    public List<Customer> getAllCustomers() {
-//        return cservice.getAllCustomers();
-//    }
+	@GetMapping("/getAllCustomers")
+    public List<Customer> getAllCustomers() {
+        return cservice.getAllCustomers();
+    }
 
     @GetMapping("/getOneCustomers/{id}")
     public Customer getCustomerById(@PathVariable int id) {
