@@ -2,12 +2,21 @@ package com.example.demo.entities;
 
 import java.math.BigDecimal;
 
+import jakarta.persistence.Lob;
+
 
 public class DummyPgImages {
-private byte[] image1;
-private byte[] image2;
-private byte[] image3;
-private byte[] image4;
+	@Lob
+	private byte[] image1;
+
+	@Lob
+	private byte[] image2;
+	
+	@Lob
+	private byte[] image3;
+	
+	@Lob
+	private byte[] image4;
 private int pid;
 private String pgName;
 private String pgAddress;
@@ -89,7 +98,7 @@ public boolean isLaundry() {
 public void setLaundry(boolean laundry) {
 	this.laundry = laundry;
 }
-public DummyPgImages(String image1, String image2, String image3, String image4, int pid, String pgName,
+public DummyPgImages(byte[] image1, byte[] image2, byte[] image3, byte[] image4, int pid, String pgName,
 		String pgAddress, BigDecimal pricing, String description, boolean wifi, boolean ac, boolean laundry) {
 	super();
 	this.image1 = image1;
