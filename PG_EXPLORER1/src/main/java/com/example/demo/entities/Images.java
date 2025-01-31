@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -16,13 +17,17 @@ public class Images {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "image_id")
 	private int imageId;
-	@Column(name="image1")
+	@Lob
+	@Column(name="image1",columnDefinition = "LONGBLOB")
 	private byte[] image1;
-	@Column(name="image2")
+	@Lob
+	@Column(name="image2",columnDefinition = "LONGBLOB")
 	private byte[] image2;
-	@Column(name="image3")
+	@Lob
+	@Column(name="image3",columnDefinition = "LONGBLOB")
 	private byte[] image3;
-	@Column(name="image4")
+	@Lob
+	@Column(name="image4",columnDefinition = "LONGBLOB")
 	private byte[] image4;
 	
 	public int getImageId() {
