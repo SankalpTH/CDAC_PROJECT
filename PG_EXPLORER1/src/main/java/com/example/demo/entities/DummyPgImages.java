@@ -11,7 +11,7 @@ public class DummyPgImages {
 
 	@Lob
 	private byte[] image2;
-
+	
 	@Lob
 	private byte[] image3;
 	
