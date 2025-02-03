@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -35,6 +36,8 @@ private Owner owner;
 @ManyToOne
 @JoinColumn(name="area_id")
 private Area area;
+@OneToOne
+
 public int getmId() {
 	return mId;
 }
