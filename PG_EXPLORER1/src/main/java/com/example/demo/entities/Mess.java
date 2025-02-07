@@ -2,6 +2,7 @@ package com.example.demo.entities;
 
 import java.math.BigDecimal;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -26,6 +28,7 @@ private String messName;
 @Column(name="mess_address")
 private String messAddress;
 private String description;
+private String gmLink;
 @Column(name="mess_type")
 @Enumerated(EnumType.STRING)
 private MessType type;
@@ -36,8 +39,9 @@ private Owner owner;
 @ManyToOne
 @JoinColumn(name="area_id")
 private Area area;
-@OneToOne
-
+@OneToOne(cascade = CascadeType.ALL)
+@JoinColumn(name = "mess_id", referencedColumnName = "mess_id")
+private MessImages messImages;
 public int getmId() {
 	return mId;
 }
@@ -86,22 +90,40 @@ public Area getArea() {
 public void setArea(Area area) {
 	this.area = area;
 }
-public Mess(int mId, String messName, String messAddress, String description, MessType type, BigDecimal pricing,
-		Owner owner, Area area) {
+public MessImages getMessImages() {
+	return messImages;
+}
+
+public String getGmLink() {
+	return gmLink;
+}
+public void setGmLink(String gmLink) {
+	this.gmLink = gmLink;
+}
+public void setMessImages(MessImages messImages) {
+	this.messImages = messImages;
+}
+
+public Mess(int mId, String messName, String messAddress, String description, String gmLink, MessType type,
+		BigDecimal pricing, Owner owner, Area area, MessImages messImages) {
 	super();
 	this.mId = mId;
 	this.messName = messName;
 	this.messAddress = messAddress;
 	this.description = description;
+	this.gmLink = gmLink;
 	this.type = type;
 	this.pricing = pricing;
 	this.owner = owner;
 	this.area = area;
+	this.messImages = messImages;
 }
 public Mess() {
 	super();
 	// TODO Auto-generated constructor stub
 }
+
+
 
 
 }
