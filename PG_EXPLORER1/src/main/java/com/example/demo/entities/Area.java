@@ -2,6 +2,8 @@ package com.example.demo.entities;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -20,8 +22,10 @@ public class Area {
     private int aId;
 	@Column(name="area_name")
 	private String areaName;
+	@JsonIgnore
 	@Column(name="city_id")
 	private int cityId;
+     @JsonIgnore
 	@OneToMany(mappedBy = "area", fetch = FetchType.EAGER)
 	private List<Pg> pg;
 	public int getaId() {

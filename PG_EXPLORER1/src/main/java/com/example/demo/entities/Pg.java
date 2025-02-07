@@ -31,6 +31,7 @@ private String pgName;
 private String pgAddress;
 private BigDecimal pricing;
 private String description;
+private String gLink;
 @Convert(converter = YesNoConverter.class)
 private boolean wifi;
 @Convert(converter = YesNoConverter.class)
@@ -88,6 +89,14 @@ public String getDescription() {
 	return description;
 }
 
+public String getgLink() {
+	return gLink;
+}
+
+public void setgLink(String gLink) {
+	this.gLink = gLink;
+}
+
 public void setDescription(String description) {
 	this.description = description;
 }
@@ -140,14 +149,16 @@ public void setImages(Images images) {
 	this.images = images;
 }
 
-public Pg(int pgId, String pgName, String pgAddress, BigDecimal pricing, String description, boolean wifi, boolean ac,
-		boolean laundry, Owner owner, Area area, Images images) {
+
+public Pg(int pgId, String pgName, String pgAddress, BigDecimal pricing, String description, String gLink, boolean wifi,
+		boolean ac, boolean laundry, Owner owner, Area area, Images images) {
 	super();
 	this.pgId = pgId;
 	this.pgName = pgName;
 	this.pgAddress = pgAddress;
 	this.pricing = pricing;
 	this.description = description;
+	this.gLink = gLink;
 	this.wifi = wifi;
 	this.ac = ac;
 	this.laundry = laundry;
