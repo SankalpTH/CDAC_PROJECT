@@ -41,12 +41,12 @@ public class MessService {
 	        }
 	        return new byte[0]; // Return an empty array if file is null or empty
 		}
-	public Mess addMess(int onid,DummyMessImages dmi,int aid) throws Exception {
-		Owner owner=orepo.findById(onid).orElse(null);
+	public Mess addMess(DummyMessImages dmi) throws Exception {
+		Owner owner=orepo.findById(dmi.getOid()).orElse(null);
 		if(owner==null) {
 			throw new Exception("Associated owner not exist");
 		}
-		Area area=arepo.findById(aid).get();
+		Area area=arepo.findById(dmi.getAid()).get();
 		Mess mess=new Mess();
 		mess.setMessName(dmi.getMessName());
 		mess.setMessAddress(dmi.getMessAddress());

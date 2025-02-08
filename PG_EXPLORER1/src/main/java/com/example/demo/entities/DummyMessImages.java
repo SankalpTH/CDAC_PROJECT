@@ -10,12 +10,13 @@ public class DummyMessImages {
 	private MultipartFile image2;
 	private MultipartFile image3;
 	private MultipartFile image4;
-	private int pid;
 	private String messName;
 	private String messAddress;
 	private BigDecimal pricing;
 	private String description;
 	private String gmLink;
+	private int oid;
+	private int aid;
 	private MessType type;
 
 	public MultipartFile getImage1() {
@@ -49,15 +50,6 @@ public class DummyMessImages {
 	public void setImage4(MultipartFile image4) {
 		this.image4 = image4;
 	}
-
-	public int getPid() {
-		return pid;
-	}
-
-	public void setPid(int pid) {
-		this.pid = pid;
-	}
-
 	public String getMessName() {
 		return messName;
 	}
@@ -98,6 +90,23 @@ public class DummyMessImages {
 		this.description = description;
 	}
 
+	
+	public int getOid() {
+		return oid;
+	}
+
+	public void setOid(int oid) {
+		this.oid = oid;
+	}
+
+	public int getAid() {
+		return aid;
+	}
+
+	public void setAid(int aid) {
+		this.aid = aid;
+	}
+
 	public MessType getType() {
 		return type;
 	}
@@ -107,20 +116,22 @@ public class DummyMessImages {
 	}
 
 	
+
 	public DummyMessImages(MultipartFile image1, MultipartFile image2, MultipartFile image3, MultipartFile image4,
-			int pid, String messName, String messAddress, BigDecimal pricing, String description, String gmLink,
-			MessType type) {
+			String messName, String messAddress, BigDecimal pricing, String description, String gmLink, int oid,
+			int aid, MessType type) {
 		super();
 		this.image1 = image1;
 		this.image2 = image2;
 		this.image3 = image3;
 		this.image4 = image4;
-		this.pid = pid;
 		this.messName = messName;
 		this.messAddress = messAddress;
 		this.pricing = pricing;
 		this.description = description;
 		this.gmLink = gmLink;
+		this.oid = oid;
+		this.aid = aid;
 		this.type = type;
 	}
 

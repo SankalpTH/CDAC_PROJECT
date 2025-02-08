@@ -36,18 +36,18 @@ public class PgService {
         return new byte[0]; // Return an empty array if file is null or empty
     }
 
-    public String addPg(int oid, DummyPgImages dpi,int aid) throws Exception {
+    public String addPg(DummyPgImages dpi) throws Exception {
         // Check for null or invalid input data
         if (dpi == null) {
             throw new Exception("Invalid data provided");
         }
 
         // Find the owner by ID
-        Owner owner = orepo.findById(oid).orElse(null);
+        Owner owner = orepo.findById(dpi.getOid()).orElse(null);
         if (owner == null) {
             throw new Exception("Owner does not exist");
        }
-        Area area =arepo.findById(aid).get();
+        Area area =arepo.findById(dpi.getAid()).get();
         
         Images image = new Images();
         image.setImage1(convertMultipartFileToByteArray(dpi.getImage1()));
@@ -69,7 +69,6 @@ public class PgService {
         pg.setArea(area);
         pg.setImages(image);
         prepo.save(pg);
-    
 		return "Added";
     }
  // Update existing PG with new details and images

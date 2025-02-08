@@ -55,6 +55,7 @@ public class OwnerService {
 		u.setPhoneNumber(duo.getPhone_number());
 		u.setRole(r);
 		u.setPermanentAddress(duo.getPermanent_address());
+		urepo.save(u);
 		
 		o.setAdharcardNumber(duo.getAdharcard_number());
 		o.setType(duo.getType());

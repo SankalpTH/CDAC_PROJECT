@@ -31,6 +31,7 @@ private String pgName;
 private String pgAddress;
 private BigDecimal pricing;
 private String description;
+@Column(name="gLink")
 private String gLink;
 @Convert(converter = YesNoConverter.class)
 private boolean wifi;

@@ -2,6 +2,8 @@ package com.example.demo.entities;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,7 +14,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -28,6 +29,7 @@ private String messName;
 @Column(name="mess_address")
 private String messAddress;
 private String description;
+@Column(name="gmLink")
 private String gmLink;
 @Column(name="mess_type")
 @Enumerated(EnumType.STRING)
@@ -35,9 +37,11 @@ private MessType type;
 private BigDecimal pricing;
 @ManyToOne
 @JoinColumn(name="oid")
+@JsonIgnore
 private Owner owner;
 @ManyToOne
 @JoinColumn(name="area_id")
+@JsonIgnore
 private Area area;
 @OneToOne(cascade = CascadeType.ALL)
 @JoinColumn(name = "mess_id", referencedColumnName = "mess_id")
