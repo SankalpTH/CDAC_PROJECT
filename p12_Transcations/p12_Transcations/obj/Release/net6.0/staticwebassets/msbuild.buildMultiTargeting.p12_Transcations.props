@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\p12_Transcations.props" />
+</Project>

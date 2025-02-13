@@ -1,0 +1,76 @@
+[
+  {
+    "ContainingType": "p12_Transcations.Controllers.FavouriteController",
+    "Method": "AddMessToFavourite",
+    "RelativePath": "basic/api/Favourite/AddMessToFavourite",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "uid",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "messId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "p12_Transcations.Controllers.FavouriteController",
+    "Method": "AddPgToFavourite",
+    "RelativePath": "basic/api/Favourite/AddPgToFavourite",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "uid",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pgId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "p12_Transcations.Controllers.FavouriteController",
+    "Method": "GetFavouriteMesses",
+    "RelativePath": "basic/api/Favourite/GetFavouriteMesses",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "uid",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "p12_Transcations.Controllers.FavouriteController",
+    "Method": "GetFavouritePGs",
+    "RelativePath": "basic/api/Favourite/GetFavouritePGs",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "uid",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  }
+]
